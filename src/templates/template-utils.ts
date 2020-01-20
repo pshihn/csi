@@ -1,4 +1,5 @@
 import { SomeCanvasContext } from '../template';
+import { PageImage } from 'src/data';
 
 export interface LineInfo {
   text: string;
@@ -36,4 +37,33 @@ export function computeLines(ctx: SomeCanvasContext, text: string, maxWidth: num
   }
   ctx.restore();
   return lines;
+}
+
+export function drawImage(ctx: SomeCanvasContext, pi: PageImage, x: number, y: number, width: number, height: number) {
+  const imw = pi.image.naturalWidth;
+  const imh = pi.image.naturalHeight;
+  if (imh && imw) {
+    let h = 0;
+    let w = 0;
+    if (imw >= imh) {
+      h = height;
+      w = (imw / imh) * h;
+      if (w < width) {
+        w = width;
+        h = (imh / imw) * w;
+      }
+    } else {
+      w = width;
+      h = (imh / imw) * w;
+      if (h < height) {
+        h = height;
+        w = (imw / imh) * h;
+      }
+    }
+    if (h && w) {
+      const sx = (imw / w) * ((w - width) / 2);
+      const sy = (imh / h) * ((h - height) / 2);
+      ctx.drawImage(pi.image, sx, sy, (imw - 2 * sx), (imh - 2 * sy), x, y, width, height);
+    }
+  }
 }

@@ -2,9 +2,23 @@ import { LitElement, customElement, TemplateResult, html, CSSResultArray, css, p
 import { flex } from 'soso/bin/styles/flex';
 import { PageData } from './data';
 import { fire } from 'soso/bin/utils/ui-utils';
+import { ButtonItem } from './controls/icon-button-list';
 
-import './controls/color-picker';
 import 'soso/bin/components/file-button';
+import './controls/color-picker';
+import './controls/icon-button-list';
+
+const HORIZ_ITEMS: ButtonItem[] = [
+  { value: 'left', icon: 'align-left' },
+  { value: 'center', icon: 'align-center' },
+  { value: 'right', icon: 'align-right' }
+];
+
+const VERT_ITEMS: ButtonItem[] = [
+  { value: 'top', icon: 'align-top' },
+  { value: 'middle', icon: 'align-middle' },
+  { value: 'bottom', icon: 'align-bottom' }
+];
 
 @customElement('control-panel')
 export class ControlPanel extends LitElement {
@@ -18,9 +32,13 @@ export class ControlPanel extends LitElement {
       :host {
         display: block;
         padding: 0px 16px 24px;
+        --soso-icon-button-padding: 6px;
       }
       .row {
         padding: 20px 0 0;
+      }
+      .row-less {
+        padding: 12px 0 0;
       }
       label {
         font-size: 12px;
@@ -32,12 +50,8 @@ export class ControlPanel extends LitElement {
       label.more-space {
         margin: 0 0 10px;
       }
-      .row-header {
-        margin: 0 0 2px;
-        min-height: 38px;
-      }
-      .row-header label {
-        margin: 0;
+      label.right-space {
+        margin: 0 10px 0 0;
       }
       input {
         background: none;
@@ -66,7 +80,7 @@ export class ControlPanel extends LitElement {
       return html``;
     }
     return html`
-    <div id="foo">
+    <div>
       <div class="row vertical layout">
         <label>Title</label>
         <input id="title" autocomplete="off" .value="${this.data.title}" @input="${this.titleChange}">
@@ -75,9 +89,12 @@ export class ControlPanel extends LitElement {
         <label>Subtitle</label>
         <input id="subtitle" autocomplete="off" .value="${this.data.subtitle}" @input="${this.subtitleChange}">
       </div>
-      <div class="row vertical layout">
-        <label>Author</label>
-        <input id="author" autocomplete="off" .value="${this.data.authorName}" @input="${this.authorChange}">
+      <div class="row-less horizontal layout center">
+        <label class="right-space">Alignment</label>
+        <span class="flex"></span>
+        <icon-button-list .items="${HORIZ_ITEMS}" .selected="${this.data.halign}" @change="${this.halignChange}"></icon-button-list>
+        <span class="flex"></span>
+        <icon-button-list .items="${VERT_ITEMS}" selected="${this.data.valign}" @change="${this.valignChange}"></icon-button-list>
       </div>
       <div class="row horizontal layout">
         <div class="vertical layout">
@@ -90,6 +107,10 @@ export class ControlPanel extends LitElement {
           <color-picker id="textColor" .value="${this.data.textColor}" @change="${this.textColorChange}"></color-picker>
         </div>
         <span class="flex"></span>
+      </div>
+      <div class="row vertical layout">
+        <label>Author</label>
+        <input id="author" autocomplete="off" .value="${this.data.authorName}" @input="${this.authorChange}">
       </div>
       <div class="row horizontal layout">
         <div class="vertical layout">
@@ -132,10 +153,25 @@ export class ControlPanel extends LitElement {
     this.fireChanged();
   }
 
+  private halignChange(e: CustomEvent) {
+    this.data!.halign = e.detail.selected;
+    this.fireChanged();
+  }
+
+  private valignChange(e: CustomEvent) {
+    this.data!.valign = e.detail.selected;
+    this.fireChanged();
+  }
+
   private async handleBgFile(e: CustomEvent) {
     const file: File = e.detail.file;
     if (file) {
-      this.data!.image = (await this.loadImage(file)) || undefined;
+      const image = await this.loadImage(file);
+      if (image) {
+        this.data!.image = { image, align: 'middle' };
+      } else {
+        this.data!.image = undefined;
+      }
       this.fireChanged();
     }
   }
@@ -143,7 +179,12 @@ export class ControlPanel extends LitElement {
   private async handleAuthorFile(e: CustomEvent) {
     const file: File = e.detail.file;
     if (file) {
-      this.data!.authorImage = (await this.loadImage(file)) || undefined;
+      const image = await this.loadImage(file);
+      if (image) {
+        this.data!.authorImage = { image, align: 'middle' };
+      } else {
+        this.data!.authorImage = undefined;
+      }
       this.fireChanged();
     }
   }
@@ -154,7 +195,7 @@ export class ControlPanel extends LitElement {
       setTimeout(() => {
         this.pendingChange = false;
         fire(this, 'update', this.data);
-      }, 500);
+      }, 200);
     }
   }
 

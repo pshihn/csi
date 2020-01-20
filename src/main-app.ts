@@ -13,13 +13,14 @@ import './control-panel';
 @customElement('main-app')
 export class MainApp extends LitElement {
   @property() private data: PageData = {
-    alignment: 'center',
     bgColor: '#fff',
     fontSize: 54,
     subtitle: '',
     textColor: '#000',
     title: '',
-    authorName: ''
+    authorName: '',
+    halign: 'center',
+    valign: 'middle'
   };
   @query('social-canvas') private canvas?: SocialCanvas;
 
