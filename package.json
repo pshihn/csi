@@ -1,0 +1,27 @@
+{
+  "name": "csi",
+  "version": "0.1.0",
+  "description": "createsocialimage.com",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pshihn/csi.git"
+  },
+  "author": "Preet Shihn",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pshihn/csi/issues"
+  },
+  "homepage": "https://github.com/pshihn/csi#readme",
+  "devDependencies": {
+    "tslint": "^5.20.1",
+    "typescript": "^3.7.5"
+  },
+  "dependencies": {
+    "lit-element": "^2.2.1",
+    "soso": "github:pshihn/soso"
+  }
+}
