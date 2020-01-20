@@ -45,6 +45,7 @@ export class ColorPicker extends LitElement {
         border: none;
         border-bottom: 1px solid;
         border-color: var(--border-color);
+        display: none;
       }
       input:focus {
         border-color: white;

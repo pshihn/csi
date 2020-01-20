@@ -51,7 +51,7 @@ export class ControlPanel extends LitElement {
         margin: 0 0 10px;
       }
       label.right-space {
-        margin: 0 10px 0 0;
+        margin: 0 6px 0 0;
       }
       input {
         background: none;
@@ -81,6 +81,12 @@ export class ControlPanel extends LitElement {
     }
     return html`
     <div>
+      <div class="row horizontal layout center">
+        <label class="right-space">Background:</label>
+        <color-picker id="bgColor" .value="${this.data.bgColor}" @change="${this.bgColorChange}"></color-picker>
+        <label class="right-space" style="margin-left: 16px;">Text color:</label>
+        <color-picker id="textColor" .value="${this.data.textColor}" @change="${this.textColorChange}"></color-picker>
+      </div>
       <div class="row vertical layout">
         <label>Title</label>
         <input id="title" autocomplete="off" .value="${this.data.title}" @input="${this.titleChange}">
@@ -96,33 +102,15 @@ export class ControlPanel extends LitElement {
         <span class="flex"></span>
         <icon-button-list .items="${VERT_ITEMS}" selected="${this.data.valign}" @change="${this.valignChange}"></icon-button-list>
       </div>
-      <div class="row horizontal layout">
-        <div class="vertical layout">
-          <label class="more-space">Background color</label>
-          <color-picker id="bgColor" .value="${this.data.bgColor}" @change="${this.bgColorChange}"></color-picker>
-        </div>
-        <span class="flex"></span>
-        <div class="vertical layout">
-          <label class="more-space">Text color</label>
-          <color-picker id="textColor" .value="${this.data.textColor}" @change="${this.textColorChange}"></color-picker>
-        </div>
-        <span class="flex"></span>
-      </div>
       <div class="row vertical layout">
-        <label>Author</label>
-        <input id="author" autocomplete="off" .value="${this.data.authorName}" @input="${this.authorChange}">
-      </div>
-      <div class="row horizontal layout">
-        <div class="vertical layout">
-          <label class="more-space">Featured Image</label>
+        <label>Featured Image</label>
+        <div class="horizontal layout center">
           <soso-file-button accept="image/*" @file="${this.handleBgFile}">Upload</soso-file-button>
+          <span class="flex"></span>
+          <icon-button-list .items="${HORIZ_ITEMS}" .selected="${this.data.halign}" @change="${this.halignChange}"></icon-button-list>
+          <span class="flex"></span>
+          <icon-button-list .items="${VERT_ITEMS}" selected="${this.data.valign}" @change="${this.valignChange}"></icon-button-list>
         </div>
-        <span class="flex"></span>
-        <div class="vertical layout">
-          <label class="more-space">Author image</label>
-          <soso-file-button accept="image/*" @file="${this.handleAuthorFile}">Upload</soso-file-button>
-        </div>
-        <span class="flex"></span>
       </div>
     </div>
     `;
@@ -135,11 +123,6 @@ export class ControlPanel extends LitElement {
 
   private subtitleChange(e: Event) {
     this.data!.subtitle = (e.target as HTMLInputElement).value.trim();
-    this.fireChanged();
-  }
-
-  private authorChange(e: Event) {
-    this.data!.authorName = (e.target as HTMLInputElement).value.trim();
     this.fireChanged();
   }
 
@@ -168,22 +151,9 @@ export class ControlPanel extends LitElement {
     if (file) {
       const image = await this.loadImage(file);
       if (image) {
-        this.data!.image = { image, align: 'middle' };
+        this.data!.image = { image, valign: 'middle', halign: 'center' };
       } else {
         this.data!.image = undefined;
-      }
-      this.fireChanged();
-    }
-  }
-
-  private async handleAuthorFile(e: CustomEvent) {
-    const file: File = e.detail.file;
-    if (file) {
-      const image = await this.loadImage(file);
-      if (image) {
-        this.data!.authorImage = { image, align: 'middle' };
-      } else {
-        this.data!.authorImage = undefined;
       }
       this.fireChanged();
     }
