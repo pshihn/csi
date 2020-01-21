@@ -21,7 +21,8 @@ export class MainApp extends LitElement {
     halign: 'center',
     valign: 'middle',
     halignImage: 'center',
-    valignImage: 'middle'
+    valignImage: 'middle',
+    tint: false
   };
   @query('social-canvas') private canvas?: SocialCanvas;
 

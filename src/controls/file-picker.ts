@@ -58,7 +58,7 @@ export class FilePicker extends LitElement {
         text-overflow: ellipsis;
       }
       soso-icon-button {
-        color: var(--highlight-pink);
+        color: var(--highlight-green);
       }
       `
     ];

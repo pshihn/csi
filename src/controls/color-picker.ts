@@ -43,8 +43,8 @@ export class ColorPicker extends LitElement {
         outline: none;
         background: none;
         border: none;
-        border-bottom: 1px solid #596c7a;
-        color: #596c7a;
+        border-bottom: 1px solid var(--border-color);
+        color: var(--border-color);
         padding: 0 0 4px;
         width: 180px;
       }

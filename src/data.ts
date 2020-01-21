@@ -12,4 +12,5 @@ export interface PageData {
   image?: HTMLImageElement;
   halignImage: HORIZ_ALIGNMENT;
   valignImage: VERT_ALIGNMENT;
+  tint: boolean;
 }

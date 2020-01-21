@@ -4,6 +4,7 @@ import { PageData } from './data';
 import { fire } from 'soso/bin/utils/ui-utils';
 import { ButtonItem } from './controls/icon-button-list';
 
+import 'soso/bin/components/switch';
 import './controls/color-picker';
 import './controls/icon-button-list';
 import './controls/file-picker';
@@ -71,6 +72,19 @@ export class ControlPanel extends LitElement {
       .spacer {
         max-width: 32px;
       }
+      soso-switch {
+        --soso-switch-track-color: var(--border-color);
+        --soso-highlight-color: var(--highlight-green);
+      }
+      .hidden {
+        visibility: hidden;
+      }
+      @media (max-width: 500px) {
+        .optionalShow,
+        .hidden {
+          display: none !important;
+        }
+      }
       `
     ];
   }
@@ -81,11 +95,14 @@ export class ControlPanel extends LitElement {
     }
     return html`
     <div>
-      <div class="row horizontal layout center">
+      <div class="row horizontal layout center wrap">
         <label class="right-space">Background:</label>
         <color-picker id="bgColor" .value="${this.data.bgColor}" @change="${this.bgColorChange}"></color-picker>
         <label class="right-space" style="margin-left: 16px;">Text color:</label>
         <color-picker id="textColor" .value="${this.data.textColor}" @change="${this.textColorChange}"></color-picker>
+        <span class="flex"></span>
+        <label class="right-space ${this.data.image ? 'optionalShow' : 'hidden'}" style="margin-left: 16px;">Tint image</label>
+        <soso-switch .checked="${this.data.tint}" class="${this.data.image ? 'optionalShow' : 'hidden'}" @change="${this.tintChange}"></soso-switch>
       </div>
       <div class="row vertical layout">
         <label>Title</label>
@@ -159,6 +176,11 @@ export class ControlPanel extends LitElement {
     }
   }
 
+  private tintChange(e: CustomEvent) {
+    this.data!.tint = e.detail.checked;
+    this.fireChanged();
+  }
+
   private async handleBgFile(e: CustomEvent) {
     const file: File = e.detail.file;
     if (file) {
@@ -173,6 +195,7 @@ export class ControlPanel extends LitElement {
       this.data!.image = undefined;
       this.fireChanged();
     }
+    this.requestUpdate();
   }
 
   private fireChanged() {
