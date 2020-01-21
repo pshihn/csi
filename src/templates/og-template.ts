@@ -37,7 +37,7 @@ export class OGTemplate implements Template {
 
     // draw background image
     if (data.image) {
-      drawImage(ctx, data.image, 0, 0, width, height);
+      drawImage(ctx, data.image, data.halignImage, data.valignImage, 0, 0, width, height);
     }
 
     // Draw text

@@ -1,4 +1,5 @@
 import { SomeCanvasContext } from '../template';
+import { HORIZ_ALIGNMENT, VERT_ALIGNMENT } from 'src/data';
 
 export interface LineInfo {
   text: string;
@@ -38,7 +39,7 @@ export function computeLines(ctx: SomeCanvasContext, text: string, maxWidth: num
   return lines;
 }
 
-export function drawImage(ctx: SomeCanvasContext, image: HTMLImageElement, x: number, y: number, width: number, height: number) {
+export function drawImage(ctx: SomeCanvasContext, image: HTMLImageElement, halign: HORIZ_ALIGNMENT, valign: VERT_ALIGNMENT, x: number, y: number, width: number, height: number) {
   const imw = image.naturalWidth;
   const imh = image.naturalHeight;
   if (imh && imw) {
@@ -60,9 +61,31 @@ export function drawImage(ctx: SomeCanvasContext, image: HTMLImageElement, x: nu
       }
     }
     if (h && w) {
-      const sx = (imw / w) * ((w - width) / 2);
-      const sy = (imh / h) * ((h - height) / 2);
-      ctx.drawImage(image, sx, sy, (imw - 2 * sx), (imh - 2 * sy), x, y, width, height);
+      let sx = (imw / w) * ((w - width) / 2);
+      let sy = (imh / h) * ((h - height) / 2);
+      const dx = imw - 2 * sx;
+      const dy = imh - 2 * sy;
+      switch (halign) {
+        case 'left':
+          sx = 0;
+          break;
+        case 'right':
+          sx = 2 * sx;
+          break;
+        case 'center':
+          break;
+      }
+      switch (valign) {
+        case 'top':
+          sy = 0;
+          break;
+        case 'bottom':
+          sy = 2 * sy;
+          break;
+        case 'middle':
+          break;
+      }
+      ctx.drawImage(image, sx, sy, dx, dy, x, y, width, height);
     }
   }
 }
