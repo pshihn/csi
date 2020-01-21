@@ -40,6 +40,14 @@ export class OGTemplate implements Template {
       drawImage(ctx, data.image, data.halignImage, data.valignImage, 0, 0, width, height);
     }
 
+    // Tint
+    if (data.tint && data.bgColor) {
+      ctx.fillStyle = data.bgColor;
+      ctx.globalAlpha = 0.3;
+      ctx.fillRect(0, 0, width, height);
+      ctx.globalAlpha = 1;
+    }
+
     // Draw text
     const titleSize = data.fontSize;
     const subSize = titleSize / 1.42;
