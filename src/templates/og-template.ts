@@ -7,11 +7,29 @@ export class OGTemplate implements Template {
     const ctx = canvas.getContext('2d')!;
     const { width, height } = canvas;
     const padding = 16;
-    const maxWidth = width - (padding * 2);
+    let maxWidth = width - (padding * 2);
     const lineHeight = 1.4;
     const sectionGap = 10;
 
     ctx.save();
+
+    // compute x-offset
+    let xOffset = padding;
+    switch (data.halign) {
+      case 'left':
+        maxWidth = maxWidth / 2;
+        ctx.textAlign = 'left';
+        break;
+      case 'right':
+        ctx.textAlign = 'right';
+        xOffset += maxWidth;
+        maxWidth = maxWidth / 2;
+        break;
+      default:
+        ctx.textAlign = 'center';
+        xOffset += maxWidth / 2;
+        break;
+    }
 
     // Fill background
     ctx.fillStyle = data.bgColor || '#ffffff';
@@ -47,21 +65,7 @@ export class OGTemplate implements Template {
         break;
     }
 
-    // compute x-offset
-    let xOffset = padding;
-    switch (data.halign) {
-      case 'left':
-        ctx.textAlign = 'left';
-        break;
-      case 'right':
-        ctx.textAlign = 'right';
-        xOffset += maxWidth;
-        break;
-      default:
-        ctx.textAlign = 'center';
-        xOffset += maxWidth / 2;
-        break;
-    }
+
 
     ctx.fillStyle = data.textColor || '#000000';
     ctx.font = titleFont;

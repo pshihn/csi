@@ -148,11 +148,15 @@ export class ControlPanel extends LitElement {
 
   private imHAlignChange(e: CustomEvent) {
     this.data!.halignImage = e.detail.selected;
-    this.fireChanged();
+    if (this.data!.image) {
+      this.fireChanged();
+    }
   }
   private imVAlignChange(e: CustomEvent) {
     this.data!.valignImage = e.detail.selected;
-    this.fireChanged();
+    if (this.data!.image) {
+      this.fireChanged();
+    }
   }
 
   private async handleBgFile(e: CustomEvent) {
