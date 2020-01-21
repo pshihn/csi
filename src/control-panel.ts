@@ -7,6 +7,7 @@ import { ButtonItem } from './controls/icon-button-list';
 import 'soso/bin/components/file-button';
 import './controls/color-picker';
 import './controls/icon-button-list';
+import './controls/file-picker';
 
 const HORIZ_ITEMS: ButtonItem[] = [
   { value: 'left', icon: 'align-left' },
@@ -105,11 +106,11 @@ export class ControlPanel extends LitElement {
       <div class="row vertical layout">
         <label>Featured Image</label>
         <div class="horizontal layout center">
-          <soso-file-button accept="image/*" @file="${this.handleBgFile}">Upload</soso-file-button>
+          <file-picker @file="${this.handleBgFile}"></file-picker>
           <span class="flex"></span>
-          <icon-button-list .items="${HORIZ_ITEMS}" .selected="${this.data.halign}" @change="${this.halignChange}"></icon-button-list>
+          <icon-button-list .items="${HORIZ_ITEMS}" .selected="${this.data.halignImage}" @change="${this.imHAlignChange}"></icon-button-list>
           <span class="flex"></span>
-          <icon-button-list .items="${VERT_ITEMS}" selected="${this.data.valign}" @change="${this.valignChange}"></icon-button-list>
+          <icon-button-list .items="${VERT_ITEMS}" selected="${this.data.valignImage}" @change="${this.imVAlignChange}"></icon-button-list>
         </div>
       </div>
     </div>
@@ -146,15 +147,27 @@ export class ControlPanel extends LitElement {
     this.fireChanged();
   }
 
+  private imHAlignChange(e: CustomEvent) {
+    this.data!.halignImage = e.detail.selected;
+    this.fireChanged();
+  }
+  private imVAlignChange(e: CustomEvent) {
+    this.data!.valignImage = e.detail.selected;
+    this.fireChanged();
+  }
+
   private async handleBgFile(e: CustomEvent) {
     const file: File = e.detail.file;
     if (file) {
       const image = await this.loadImage(file);
       if (image) {
-        this.data!.image = { image, valign: 'middle', halign: 'center' };
+        this.data!.image = image;
       } else {
         this.data!.image = undefined;
       }
+      this.fireChanged();
+    } else {
+      this.data!.image = undefined;
       this.fireChanged();
     }
   }

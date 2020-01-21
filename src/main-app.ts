@@ -19,7 +19,9 @@ export class MainApp extends LitElement {
     textColor: '#000',
     title: '',
     halign: 'center',
-    valign: 'middle'
+    valign: 'middle',
+    halignImage: 'center',
+    valignImage: 'middle'
   };
   @query('social-canvas') private canvas?: SocialCanvas;
 
