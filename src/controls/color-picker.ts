@@ -1,10 +1,12 @@
-import { LitElement, customElement, TemplateResult, html, CSSResultArray, css, property } from 'lit-element';
+import { LitElement, customElement, TemplateResult, html, CSSResultArray, css, property, query } from 'lit-element';
 import { flex } from 'soso/bin/styles/flex';
 import { fire } from 'soso/bin/utils/ui-utils';
 
 @customElement('color-picker')
 export class ColorPicker extends LitElement {
   @property() value = '';
+  @property() private popupShowing = false;
+  @query('input') private input?: HTMLInputElement;
 
   static get styles(): CSSResultArray {
     return [
@@ -12,6 +14,7 @@ export class ColorPicker extends LitElement {
       css`
       :host {
         display: inline-block;
+        position: relative;
       }
       #colorView {
         position: absolute;
@@ -33,22 +36,17 @@ export class ColorPicker extends LitElement {
         position: relative;
         overflow: hidden;
       }
+
       input {
+        font-family: monospace;
+        font-size: 15px;
+        outline: none;
         background: none;
         border: none;
-        color: inherit;
-        outline: none;
-        font-size: 15px;
-        box-sizing: border-box;
-        width: 100px;
-        padding: 0 4px;
-        border: none;
-        border-bottom: 1px solid;
-        border-color: var(--border-color);
-        display: none;
-      }
-      input:focus {
-        border-color: white;
+        border-bottom: 1px solid #596c7a;
+        color: #596c7a;
+        padding: 0 0 4px;
+        width: 180px;
       }
       `
     ];
@@ -56,13 +54,55 @@ export class ColorPicker extends LitElement {
 
   render(): TemplateResult {
     return html`
-    <div class="horizontal layout">
-      <div id="colorBG">
-        <div id="colorView" style="background-color: ${this.value};"></div>
-      </div>
-      <input .value="${this.value}" type="text" @input="${this.onInput}"></div>
+    <style>
+      #popup {
+        background: white;
+        position: absolute;
+        bottom: 100%;
+        padding: 16px;
+        margin-bottom: 8px;
+        border-radius: 5px;
+        box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 5px 8px 0 rgba(0,0,0,.14), 0 1px 14px 0 rgba(0,0,0,.12);
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        transform: translate3d(-45%,60%,0) scale(0);
+        opacity: 0;
+        pointer-events: none;
+      }
+      #popup.showing {
+        transform: translate3d(0,0,0) scale(1);
+        opacity: 1;
+        pointer-events: auto;
+      }
+    </style>
+    <div id="colorBG">
+      <div id="colorView" style="background-color: ${this.value};" @click="${this.openPopup}"></div>
+    </div>
+    <div id="popup" @click="${(e: Event) => e.stopPropagation()}" class="${this.popupShowing ? 'showing' : ''}">
+      <input type="tex" .value="${this.value}" @input="${this.onInput}">
     </div>
     `;
+  }
+
+  private bodyListener = () => this.hidePopup();
+
+  private openPopup(e: Event) {
+    e.stopPropagation();
+    if (this.popupShowing) {
+      this.hidePopup();
+    } else {
+      this.popupShowing = true;
+      setTimeout(() => {
+        if (this.input) {
+          this.input.focus();
+        }
+      });
+      document.addEventListener('click', this.bodyListener);
+    }
+  }
+
+  private hidePopup() {
+    this.popupShowing = false;
+    document.removeEventListener('click', this.bodyListener);
   }
 
   private onInput(e: Event) {
