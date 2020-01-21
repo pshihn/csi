@@ -4,7 +4,6 @@ import { PageData } from './data';
 import { fire } from 'soso/bin/utils/ui-utils';
 import { ButtonItem } from './controls/icon-button-list';
 
-import 'soso/bin/components/file-button';
 import './controls/color-picker';
 import './controls/icon-button-list';
 import './controls/file-picker';
@@ -69,8 +68,8 @@ export class ControlPanel extends LitElement {
       input:focus {
         border-color: white;
       }
-      soso-file-button {
-        color: var(--border-color);
+      .spacer {
+        max-width: 32px;
       }
       `
     ];
@@ -100,7 +99,7 @@ export class ControlPanel extends LitElement {
         <label class="right-space">Alignment</label>
         <span class="flex"></span>
         <icon-button-list .items="${HORIZ_ITEMS}" .selected="${this.data.halign}" @change="${this.halignChange}"></icon-button-list>
-        <span class="flex"></span>
+        <span class="flex spacer"></span>
         <icon-button-list .items="${VERT_ITEMS}" selected="${this.data.valign}" @change="${this.valignChange}"></icon-button-list>
       </div>
       <div class="row vertical layout">
@@ -109,7 +108,7 @@ export class ControlPanel extends LitElement {
           <file-picker @file="${this.handleBgFile}"></file-picker>
           <span class="flex"></span>
           <icon-button-list .items="${HORIZ_ITEMS}" .selected="${this.data.halignImage}" @change="${this.imHAlignChange}"></icon-button-list>
-          <span class="flex"></span>
+          <span class="flex spacer"></span>
           <icon-button-list .items="${VERT_ITEMS}" selected="${this.data.valignImage}" @change="${this.imVAlignChange}"></icon-button-list>
         </div>
       </div>
