@@ -1,4 +1,4 @@
-import { SomeCanvasContext } from '../template';
+import { SomeCanvasContext } from './template';
 import { HORIZ_ALIGNMENT, VERT_ALIGNMENT } from 'src/data';
 
 export interface LineInfo {
@@ -87,5 +87,12 @@ export function drawImage(ctx: SomeCanvasContext, image: HTMLImageElement, halig
       }
       ctx.drawImage(image, sx, sy, dx, dy, x, y, width, height);
     }
+  }
+}
+
+export function renderLines(ctx: SomeCanvasContext, lines: LineInfo[], maxWidth: number, fontSize: number, xOffset: number, yOffset: number) {
+  for (let i = 0; i < lines.length; i++) {
+    const y = (i * fontSize * 1.4) + fontSize + yOffset;
+    ctx.fillText(lines[i].text, xOffset, y, maxWidth);
   }
 }

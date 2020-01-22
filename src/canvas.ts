@@ -1,6 +1,7 @@
 import { LitElement, customElement, TemplateResult, html, css, CSSResult, query } from 'lit-element';
 import { PageData } from './data';
 import { Renderer } from './render';
+import { TemplateType } from './templates/template';
 
 const WIDTH = 1280;
 const HEIGHT = 669;
@@ -10,12 +11,12 @@ export class SocialCanvas extends LitElement {
   @query('canvas') private canvas?: HTMLCanvasElement;
 
   private renderer?: Renderer;
-  private currentTemplate = 'default';
+  private currentTemplate: TemplateType = 'og';
 
-  set template(value: string) {
+  set templateType(value: TemplateType) {
     this.currentTemplate = value;
     if (this.renderer) {
-      this.renderer.templateId = value;
+      this.renderer.templateType = value;
     }
   }
 
@@ -46,7 +47,7 @@ export class SocialCanvas extends LitElement {
     if (this.canvas) {
       if (!this.renderer) {
         this.renderer = new Renderer(this.canvas.transferControlToOffscreen());
-        this.renderer.templateId = this.currentTemplate;
+        this.renderer.templateType = this.currentTemplate;
       }
       await this.renderer.draw(data);
     }

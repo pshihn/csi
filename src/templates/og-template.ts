@@ -1,6 +1,6 @@
-import { Template, SomeCanvas, SomeCanvasContext } from '../template';
+import { Template, SomeCanvas } from './template';
 import { PageData } from '../data';
-import { computeLines, LineInfo, drawImage } from './template-utils';
+import { computeLines, renderLines, drawImage } from './template-utils';
 
 export class OGTemplate implements Template {
   async draw(canvas: SomeCanvas, data: PageData): Promise<void> {
@@ -48,7 +48,7 @@ export class OGTemplate implements Template {
       ctx.globalAlpha = 1;
     }
 
-    // Draw text
+    // Compute text metrics
     const titleSize = data.fontSize;
     const subSize = titleSize / 1.42;
     const titleFont = `normal ${titleSize}px 'Raleway', sans-serif`;
@@ -73,21 +73,13 @@ export class OGTemplate implements Template {
         break;
     }
 
-
-
+    // Render text
     ctx.fillStyle = data.textColor || '#000000';
     ctx.font = titleFont;
-    this.renderLines(ctx, titleLines, maxWidth, titleSize, xOffset, yOffset);
+    renderLines(ctx, titleLines, maxWidth, titleSize, xOffset, yOffset);
     ctx.font = subFont;
-    this.renderLines(ctx, subLines, maxWidth, subSize, xOffset, yOffset + titleHeight + sectionGap);
+    renderLines(ctx, subLines, maxWidth, subSize, xOffset, yOffset + titleHeight + sectionGap);
 
     ctx.restore();
-  }
-
-  private renderLines(ctx: SomeCanvasContext, lines: LineInfo[], maxWidth: number, fontSize: number, xOffset: number, yOffset: number) {
-    for (let i = 0; i < lines.length; i++) {
-      const y = (i * fontSize * 1.4) + fontSize + yOffset;
-      ctx.fillText(lines[i].text, xOffset, y, maxWidth);
-    }
   }
 }

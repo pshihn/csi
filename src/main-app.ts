@@ -2,6 +2,8 @@ import { LitElement, customElement, TemplateResult, html, CSSResultArray, css, p
 import { flex } from 'soso/bin/styles/flex';
 import { PageData } from './data';
 import { SocialCanvas } from './canvas';
+import { templateList } from './templates/template-factory';
+import { TemplateInfo } from './templates/template';
 
 import 'soso/bin/components/app-shell';
 import 'soso/bin/components/app-bar';
@@ -9,12 +11,14 @@ import 'soso/bin/components/icon-button';
 import './app-icons';
 import './canvas';
 import './control-panel';
+import './template-picker';
 
 @customElement('main-app')
 export class MainApp extends LitElement {
+  @property() private currentTemplate = templateList[0].type;
   @property() private data: PageData = {
     bgColor: '#fff',
-    fontSize: 54,
+    fontSize: 60,
     subtitle: '',
     textColor: '#000',
     title: '',
@@ -63,10 +67,12 @@ export class MainApp extends LitElement {
       <soso-app-bar slot="toolbar">
         <soso-icon-button slot="nav" icon="menu"></soso-icon-button>
       </soso-app-bar>
-      <div slot="drawer"></div>
+      <div slot="drawer">
+        <template-picker .templates="${templateList}" .selected="${this.currentTemplate}" @select="${this.onTemplateSelect}"></template-picker>
+      </div>
       <main slot="main" class="vertical layout">
         <div class="flex"></div>
-        <social-canvas></social-canvas>
+        <social-canvas .templateType="${this.currentTemplate}"></social-canvas>
         <div class="flex"></div>
         <div id="controlsSection">
           <control-panel .data="${this.data}" @update="${this.handleUpdate}"></control-panel>
@@ -78,5 +84,10 @@ export class MainApp extends LitElement {
 
   private handleUpdate() {
     this.canvas!.draw(this.data);
+  }
+
+  private onTemplateSelect(e: CustomEvent<TemplateInfo>) {
+    this.currentTemplate = e.detail.type;
+    this.handleUpdate();
   }
 }

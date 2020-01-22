@@ -1,6 +1,6 @@
 import { PageData } from './data';
-import { Template, SomeCanvas } from './template';
-import { templateById } from './templates/template-factory';
+import { Template, SomeCanvas, TemplateType } from './templates/template';
+import { templateByType } from './templates/template-factory';
 
 export class Renderer {
   private canvas: SomeCanvas;
@@ -11,10 +11,10 @@ export class Renderer {
     this.canvas = canvas;
   }
 
-  set templateId(value: string) {
+  set templateType(value: TemplateType) {
     if (value !== this.tid) {
       this.tid = value;
-      this.template = templateById(value);
+      this.template = templateByType(value);
     }
   }
 
