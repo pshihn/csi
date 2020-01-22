@@ -3,6 +3,7 @@ import { flex } from 'soso/bin/styles/flex';
 import { PageData } from './data';
 import { fire } from 'soso/bin/utils/ui-utils';
 import { ButtonItem } from './controls/icon-button-list';
+import { TemplateType } from './templates/template';
 
 import 'soso/bin/components/switch';
 import './controls/color-picker';
@@ -23,6 +24,7 @@ const VERT_ITEMS: ButtonItem[] = [
 
 @customElement('control-panel')
 export class ControlPanel extends LitElement {
+  @property() templateType: TemplateType = 'og';
   @property() data?: PageData;
   private pendingChange = false;
 
@@ -93,6 +95,11 @@ export class ControlPanel extends LitElement {
     if (!this.data) {
       return html``;
     }
+
+    const tintHidden = this.templateType === 'swyx';
+    const textHAlignItems = this.templateType === 'swyx' ? [HORIZ_ITEMS[0], HORIZ_ITEMS[2]] : HORIZ_ITEMS;
+    const textVAlignHidden = this.templateType === 'swyx';
+
     return html`
     <div>
       <div class="row horizontal layout center wrap">
@@ -101,8 +108,8 @@ export class ControlPanel extends LitElement {
         <label class="right-space" style="margin-left: 16px;">Text color:</label>
         <color-picker id="textColor" .value="${this.data.textColor}" @change="${this.textColorChange}"></color-picker>
         <span class="flex"></span>
-        <label class="right-space ${this.data.image ? 'optionalShow' : 'hidden'}" style="margin-left: 16px;">Tint image</label>
-        <soso-switch .checked="${this.data.tint}" class="${this.data.image ? 'optionalShow' : 'hidden'}" @change="${this.tintChange}"></soso-switch>
+        <label class="right-space ${(this.data.image && !tintHidden) ? 'optionalShow' : 'hidden'}" style="margin-left: 16px;">Tint image</label>
+        <soso-switch .checked="${this.data.tint}" class="${(this.data.image && !tintHidden) ? 'optionalShow' : 'hidden'}" @change="${this.tintChange}"></soso-switch>
       </div>
       <div class="row vertical layout">
         <label>Title</label>
@@ -115,9 +122,9 @@ export class ControlPanel extends LitElement {
       <div class="row-less horizontal layout center">
         <label class="right-space">Alignment</label>
         <span class="flex"></span>
-        <icon-button-list .items="${HORIZ_ITEMS}" .selected="${this.data.halign}" @change="${this.halignChange}"></icon-button-list>
+        <icon-button-list .items="${textHAlignItems}" .selected="${this.data.halign}" @change="${this.halignChange}"></icon-button-list>
         <span class="flex spacer"></span>
-        <icon-button-list .items="${VERT_ITEMS}" selected="${this.data.valign}" @change="${this.valignChange}"></icon-button-list>
+        <icon-button-list class="${textVAlignHidden ? 'hidden' : ''}" .items="${VERT_ITEMS}" selected="${this.data.valign}" @change="${this.valignChange}"></icon-button-list>
       </div>
       <div class="row vertical layout">
         <label>Featured Image</label>

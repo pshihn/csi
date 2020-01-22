@@ -75,7 +75,7 @@ export class MainApp extends LitElement {
         <social-canvas .templateType="${this.currentTemplate}"></social-canvas>
         <div class="flex"></div>
         <div id="controlsSection">
-          <control-panel .data="${this.data}" @update="${this.handleUpdate}"></control-panel>
+          <control-panel .templateType="${this.currentTemplate}" .data="${this.data}" @update="${this.handleUpdate}"></control-panel>
         </div>
       </main>
     </soso-app-shell>
