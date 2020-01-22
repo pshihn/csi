@@ -56,7 +56,6 @@ export class SwyxTemplate implements Template {
 
     // title
     const extraW = subHeight * Math.tan(Math.PI / 12);
-    console.log(subHeight, extraW);
     maxWidth += extraW;
     const titleLines = computeLines(ctx, data.title, maxWidth, titleFont);
     const heightAvailable = height - subHeight - padding;

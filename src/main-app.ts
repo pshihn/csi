@@ -88,6 +88,6 @@ export class MainApp extends LitElement {
 
   private onTemplateSelect(e: CustomEvent<TemplateInfo>) {
     this.currentTemplate = e.detail.type;
-    this.handleUpdate();
+    this.updateComplete.then(() => this.handleUpdate());
   }
 }
