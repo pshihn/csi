@@ -2,6 +2,7 @@ import { LitElement, customElement, TemplateResult, html, css, CSSResult, query 
 import { PageData } from './data';
 import { Renderer } from './render';
 import { TemplateType } from './templates/template';
+import { link } from 'workly';
 
 const WIDTH = 1280;
 const HEIGHT = 669;
@@ -47,7 +48,10 @@ export class SocialCanvas extends LitElement {
     if (this.canvas && (!this.renderer)) {
       const supportsTransfer = !!this.canvas.transferControlToOffscreen;
       if (supportsTransfer) {
-        this.renderer = new Renderer(this.canvas.transferControlToOffscreen());
+        const worker = new Worker('/dist/worker.js');
+        const offscreenCanvas = this.canvas.transferControlToOffscreen();
+        worker.postMessage({ canvas: offscreenCanvas }, [offscreenCanvas as any]);
+        this.renderer = link<Renderer>(worker);
       } else {
         this.renderer = new Renderer(this.canvas);
       }
