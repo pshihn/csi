@@ -43,13 +43,24 @@ export class SocialCanvas extends LitElement {
     `;
   }
 
+  private initializeRenderer() {
+    if (this.canvas && (!this.renderer)) {
+      const supportsTransfer = !!this.canvas.transferControlToOffscreen;
+      if (supportsTransfer) {
+        this.renderer = new Renderer(this.canvas.transferControlToOffscreen());
+      } else {
+        this.renderer = new Renderer(this.canvas);
+      }
+    }
+  }
+
   async draw(data: PageData): Promise<void> {
     if (this.canvas) {
-      if (!this.renderer) {
-        this.renderer = new Renderer(this.canvas.transferControlToOffscreen());
+      this.initializeRenderer();
+      if (this.renderer) {
         this.renderer.templateType = this.currentTemplate;
+        await this.renderer.draw(data);
       }
-      await this.renderer.draw(data);
     }
   }
 }

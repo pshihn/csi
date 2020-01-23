@@ -24,5 +24,18 @@ export default [
         comments: false
       }
     })]
+  },
+  {
+    input: 'bin/worker.js',
+    output: {
+      file: `${outFolder}/worker.js`,
+      format: 'iife'
+    },
+    onwarn,
+    plugins: [resolve(), terser({
+      output: {
+        comments: false
+      }
+    })]
   }
 ];
