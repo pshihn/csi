@@ -1,6 +1,7 @@
 import { Template, TemplateInfo, TemplateType } from './template';
 import { OGTemplate } from './og-template';
 import { SwyxTemplate } from './swyx-template';
+import { AuthorTemplate } from './author-template';
 
 const templateMap = new Map<TemplateType, Template>();
 
@@ -11,6 +12,7 @@ export function templateByType(type: TemplateType): Template | null {
   let template: Template | null = null;
   switch (type) {
     case 'author':
+      template = new AuthorTemplate();
       break;
     case 'sketchy':
       break;

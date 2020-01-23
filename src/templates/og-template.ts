@@ -6,10 +6,10 @@ export class OGTemplate implements Template {
   async draw(canvas: SomeCanvas, data: PageData): Promise<void> {
     const ctx = canvas.getContext('2d')!;
     const { width, height } = canvas;
-    const padding = 16;
+    const padding = 20;
     let maxWidth = width - (padding * 2);
     const lineHeight = 1.4;
-    const sectionGap = 10;
+    const sectionGap = 24;
 
     ctx.save();
 
@@ -50,7 +50,7 @@ export class OGTemplate implements Template {
 
     // Compute text metrics
     const titleSize = data.fontSize;
-    const subSize = titleSize / 1.42;
+    const subSize = titleSize / 1.6;
     const titleFont = `normal ${titleSize}px 'Raleway', sans-serif`;
     const subFont = `300 ${subSize}px sans-serif`;
     const titleLines = computeLines(ctx, data.title, maxWidth, titleFont);

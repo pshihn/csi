@@ -4,6 +4,7 @@ export type HORIZ_ALIGNMENT = 'left' | 'right' | 'center';
 export interface PageData {
   title: string;
   subtitle: string;
+  author: string;
   halign: HORIZ_ALIGNMENT;
   valign: VERT_ALIGNMENT;
   fontSize: number;

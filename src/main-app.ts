@@ -20,6 +20,7 @@ export class MainApp extends LitElement {
     bgColor: '#fff',
     fontSize: 60,
     subtitle: '',
+    author: '',
     textColor: '#000',
     title: '',
     halign: 'center',

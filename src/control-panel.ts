@@ -81,6 +81,9 @@ export class ControlPanel extends LitElement {
       .hidden {
         visibility: hidden;
       }
+      .noshow {
+        display: none !important;
+      }
       @media (max-width: 500px) {
         .optionalShow,
         .hidden {
@@ -96,28 +99,34 @@ export class ControlPanel extends LitElement {
       return html``;
     }
 
-    const tintHidden = this.templateType === 'swyx';
-    const textHAlignItems = this.templateType === 'swyx' ? [HORIZ_ITEMS[0], HORIZ_ITEMS[2]] : HORIZ_ITEMS;
-    const textVAlignHidden = this.templateType === 'swyx';
+    // TODO: better way of controling visibility
+    const tintHidden = this.templateType !== 'og';
+    const textHAlignItems = this.templateType !== 'og' ? [HORIZ_ITEMS[0], HORIZ_ITEMS[2]] : HORIZ_ITEMS;
+    const textVAlignHidden = this.templateType !== 'og';
+    const authorHidden = this.templateType !== 'author';
 
     return html`
     <div>
       <div class="row horizontal layout center wrap">
         <label class="right-space">Background:</label>
-        <color-picker id="bgColor" .value="${this.data.bgColor}" @change="${this.bgColorChange}"></color-picker>
+        <color-picker .value="${this.data.bgColor}" @change="${this.bgColorChange}"></color-picker>
         <label class="right-space" style="margin-left: 16px;">Text color:</label>
-        <color-picker id="textColor" .value="${this.data.textColor}" @change="${this.textColorChange}"></color-picker>
+        <color-picker .value="${this.data.textColor}" @change="${this.textColorChange}"></color-picker>
         <span class="flex"></span>
         <label class="right-space ${(this.data.image && !tintHidden) ? 'optionalShow' : 'hidden'}" style="margin-left: 16px;">Tint image</label>
         <soso-switch .checked="${this.data.tint}" class="${(this.data.image && !tintHidden) ? 'optionalShow' : 'hidden'}" @change="${this.tintChange}"></soso-switch>
       </div>
       <div class="row vertical layout">
         <label>Title</label>
-        <input id="title" autocomplete="off" .value="${this.data.title}" @input="${this.titleChange}">
+        <input autocomplete="off" .value="${this.data.title}" @input="${this.titleChange}">
       </div>
       <div class="row vertical layout">
         <label>Subtitle</label>
-        <input id="subtitle" autocomplete="off" .value="${this.data.subtitle}" @input="${this.subtitleChange}">
+        <input autocomplete="off" .value="${this.data.subtitle}" @input="${this.subtitleChange}">
+      </div>
+      <div class="row vertical layout ${authorHidden ? 'noshow' : ''}">
+        <label>Author</label>
+        <input autocomplete="off" .value="${this.data.subtitle}" @input="${this.authorChange}">
       </div>
       <div class="row-less horizontal layout center">
         <label class="right-space">Alignment</label>
@@ -147,6 +156,11 @@ export class ControlPanel extends LitElement {
 
   private subtitleChange(e: Event) {
     this.data!.subtitle = (e.target as HTMLInputElement).value.trim();
+    this.fireChanged();
+  }
+
+  private authorChange(e: Event) {
+    this.data!.author = (e.target as HTMLInputElement).value.trim();
     this.fireChanged();
   }
 
