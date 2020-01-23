@@ -71,7 +71,7 @@ export class TemplateList extends LitElement {
     ${this.templates.map((d) => html`
       <button class="vertical layout ${this.selected === d.type ? 'selected' : ''}" @click="${() => fire(this, 'select', d)}">
         <label>${d.name}</label>
-        <img src="${d.preview}">
+        <img alt="${d.name}" src="${d.preview}">
         <div class="bar"></div>
       </button>
     `)
