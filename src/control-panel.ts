@@ -225,7 +225,7 @@ export class ControlPanel extends LitElement {
       setTimeout(() => {
         this.pendingChange = false;
         fire(this, 'update', this.data);
-      }, 200);
+      }, 16);
     }
   }
 

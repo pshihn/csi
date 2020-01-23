@@ -6,6 +6,8 @@ export class Renderer {
   private canvas: SomeCanvas;
   private tid?: string;
   private template: Template | null = null;
+  private pendingData?: PageData;
+  private pending = false;
 
   constructor(canvas: SomeCanvas) {
     this.canvas = canvas;
@@ -18,10 +20,24 @@ export class Renderer {
     }
   }
 
-
   async draw(data: PageData): Promise<void> {
-    if (this.template) {
-      await this.template.draw(this.canvas, data);
+    if (this.pending) {
+      this.pendingData = data;
+    } else {
+      this.pending = true;
+      if (this.template) {
+        try {
+          await this.template.draw(this.canvas, data);
+        } catch (err) { console.error(err); }
+      }
+      this.pending = false;
+      if (this.pendingData) {
+        if (!!self.requestAnimationFrame) {
+          self.requestAnimationFrame(() => this.draw(this.pendingData!));
+        } else {
+          self.setTimeout(() => this.draw(this.pendingData!));
+        }
+      }
     }
   }
 }
