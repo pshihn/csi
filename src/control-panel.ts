@@ -126,7 +126,7 @@ export class ControlPanel extends LitElement {
       </div>
       <div class="row vertical layout ${authorHidden ? 'noshow' : ''}">
         <label>Author</label>
-        <input autocomplete="off" .value="${this.data.subtitle}" @input="${this.authorChange}">
+        <input autocomplete="off" .value="${this.data.author}" @input="${this.authorChange}">
       </div>
       <div class="row-less horizontal layout center">
         <label class="right-space">Alignment</label>
