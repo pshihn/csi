@@ -1,8 +1,32 @@
-import { Template, SomeCanvas } from './template';
+import { Template, SomeCanvas, SomeCanvasContext } from './template';
 import { PageData } from '../data';
 import { computeLines, renderLines, drawImage } from './template-utils';
+import { rectangle, ellipse } from 'roughjs/bin/renderer';
+import { ResolvedOptions, OpSet } from 'roughjs/bin/core';
 
 export class SketchyTemplate implements Template {
+  private roughOptions: ResolvedOptions = {
+    maxRandomnessOffset: 2,
+    roughness: 3,
+    bowing: 1,
+    stroke: '#000',
+    strokeWidth: 5,
+    curveTightness: 0,
+    curveFitting: 0.95,
+    curveStepCount: 9,
+    fillStyle: 'hachure',
+    fillWeight: -1,
+    hachureAngle: -41,
+    hachureGap: -1,
+    dashOffset: -1,
+    dashGap: -1,
+    zigzagOffset: -1,
+    seed: 0,
+    roughnessGain: 1
+  };
+  private rectangleOps?: OpSet;
+  private circleOps?: OpSet;
+
   async draw(canvas: SomeCanvas, data: PageData): Promise<void> {
     const ctx = canvas.getContext('2d')!;
     const { width, height } = canvas;
@@ -13,6 +37,7 @@ export class SketchyTemplate implements Template {
     const maxWidth = (2 * thirdW) - doublePadidng;
     const lineHeight = 1.4;
     const sectionGap = 24;
+    const textColor = data.textColor || '#000000';
 
     ctx.save();
 
@@ -34,6 +59,22 @@ export class SketchyTemplate implements Template {
       ctx.restore();
     }
 
+    // Draw sketchy bit
+    if (!this.rectangleOps) {
+      this.rectangleOps = rectangle(padding / 2, padding / 2, width - padding, height - padding, this.roughOptions);
+    }
+    ctx.save();
+    ctx.strokeStyle = textColor;
+    ctx.lineWidth = this.roughOptions.strokeWidth;
+    this.drawOpset(ctx, this.rectangleOps!);
+    if (data.image) {
+      if (!this.circleOps) {
+        this.circleOps = ellipse(imx + radius, imy + radius, 2 * radius, 2 * radius, this.roughOptions);
+      }
+      this.drawOpset(ctx, this.circleOps!);
+    }
+    ctx.restore();
+
     // Tender text
     ctx.textAlign = 'center';
     const titleSize = data.fontSize * 1.2;
@@ -51,12 +92,34 @@ export class SketchyTemplate implements Template {
       xOffset += thirdW;
     }
 
-    ctx.fillStyle = data.textColor || '#000000';
+    ctx.fillStyle = textColor;
     ctx.font = titleFont;
     renderLines(ctx, titleLines, maxWidth, titleSize, xOffset, yOffset);
     ctx.font = subFont;
     renderLines(ctx, subLines, maxWidth, subSize, xOffset, yOffset + titleHeight + sectionGap);
 
     ctx.restore();
+  }
+
+  private drawOpset(ctx: SomeCanvasContext, drawing: OpSet) {
+    ctx.beginPath();
+    for (const item of drawing.ops) {
+      const data = item.data;
+      switch (item.op) {
+        case 'move':
+          ctx.moveTo(data[0], data[1]);
+          break;
+        case 'bcurveTo':
+          ctx.bezierCurveTo(data[0], data[1], data[2], data[3], data[4], data[5]);
+          break;
+        case 'qcurveTo':
+          ctx.quadraticCurveTo(data[0], data[1], data[2], data[3]);
+          break;
+        case 'lineTo':
+          ctx.lineTo(data[0], data[1]);
+          break;
+      }
+    }
+    ctx.stroke();
   }
 }

@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "lit-element": "^2.2.1",
+    "roughjs": "^4.0.4",
     "soso": "github:pshihn/soso",
     "workly": "^1.3.1"
   }
