@@ -29,6 +29,8 @@ export class MainApp extends LitElement {
     valignImage: 'middle',
     tint: false
   };
+  @property() downloadActive = false;
+  @query('#downloadLink') private downloadLink?: HTMLAnchorElement;
   @query('social-canvas') private canvas?: SocialCanvas;
 
   static get styles(): CSSResultArray {
@@ -58,6 +60,31 @@ export class MainApp extends LitElement {
         border-radius: 10px 10px 0 0;
         box-sizing: border-box;
       }
+      #downloadButton {
+        background: none;
+        border: none;
+        color: inherit;
+        outline: none;
+        text-transform: uppercase;
+        padding: 0 16px;
+        letter-spacing: 1.25px;
+        font-size: 12px;
+        cursor: pointer;
+      }
+      a#downloadLink {
+        text-decoration: none;
+        outline: none;
+        border: none;
+        cursor: pointer;
+        color: var(--highlight-blue);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+      }
+      a#downloadLink.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
       `
     ];
   }
@@ -67,6 +94,12 @@ export class MainApp extends LitElement {
     <soso-app-shell>
       <soso-app-bar slot="toolbar">
         <soso-icon-button slot="nav" icon="menu"></soso-icon-button>
+        <a id="downloadLink" download="my-social-image.png" slot="actions" class="${this.downloadActive ? 'active' : ''}">
+          <button id="downloadButton" class="horizontal layout center" @click="${this.handleDownload}">
+            <soso-icon-button icon="download"></soso-icon-button>
+            <span>Download</span>
+          </button>
+        </a>
       </soso-app-bar>
       <div slot="drawer">
         <template-picker .templates="${templateList}" .selected="${this.currentTemplate}" @select="${this.onTemplateSelect}"></template-picker>
@@ -84,11 +117,18 @@ export class MainApp extends LitElement {
   }
 
   private handleUpdate() {
+    this.downloadActive = true;
     this.canvas!.draw(this.data);
   }
 
   private onTemplateSelect(e: CustomEvent<TemplateInfo>) {
     this.currentTemplate = e.detail.type;
     this.updateComplete.then(() => this.handleUpdate());
+  }
+
+  private handleDownload() {
+    if (this.canvas && this.downloadLink) {
+      this.downloadLink.href = this.canvas.getDataUrl();
+    }
   }
 }

@@ -45,7 +45,7 @@ export class TemplateList extends LitElement {
         bottom: 12px;
         right: 0;
         width: 6px;
-        background: var(--highlight-pink);
+        background: var(--highlight-blue);
         opacity: 0;
         transition: opacity 0.28s ease;
       }

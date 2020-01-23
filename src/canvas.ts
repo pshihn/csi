@@ -67,4 +67,12 @@ export class SocialCanvas extends LitElement {
       }
     }
   }
+
+  getDataUrl(): string {
+    if (this.canvas) {
+      return this.canvas.toDataURL('image/png');
+    } else {
+      return '';
+    }
+  }
 }

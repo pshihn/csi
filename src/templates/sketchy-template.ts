@@ -26,6 +26,7 @@ export class SketchyTemplate implements Template {
   };
   private rectangleOps?: OpSet;
   private circleOps?: OpSet;
+  private circleRightAligned?: boolean;
 
   async draw(canvas: SomeCanvas, data: PageData): Promise<void> {
     const ctx = canvas.getContext('2d')!;
@@ -68,7 +69,8 @@ export class SketchyTemplate implements Template {
     ctx.lineWidth = this.roughOptions.strokeWidth;
     this.drawOpset(ctx, this.rectangleOps!);
     if (data.image) {
-      if (!this.circleOps) {
+      if ((textToTheRight !== this.circleRightAligned) || (!this.circleOps)) {
+        this.circleRightAligned = textToTheRight;
         this.circleOps = ellipse(imx + radius, imy + radius, 2 * radius, 2 * radius, this.roughOptions);
       }
       this.drawOpset(ctx, this.circleOps!);
