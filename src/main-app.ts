@@ -44,7 +44,7 @@ export class MainApp extends LitElement {
         --soso-app-drawer-border: none;
       }
       soso-app-bar {
-        background: none;
+        background: var(--dark-grey);
       }
       main {
         padding: 8px 8px 0;
