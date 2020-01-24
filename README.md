@@ -1,2 +1,2 @@
 # csi
-createsocialimage.com
+createsocialimages.com
