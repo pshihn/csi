@@ -65,8 +65,17 @@
 
 <body>
   <main-app></main-app>
-  <!-- <script type="module" src="./bin/main-app.js"></script> -->
-  <script src="./dist/app.js"></script>
+  <script async src="./dist/app.js"></script>
+  <script>
+    window.ga = window.ga || ((...args) => (ga.q = ga.q || []).push(args));
+    ga("create", "UA-134693493-6", "auto");
+    ga("set", "transport", "beacon");
+    ga("send", "pageview");
+    const s = document.createElement("script");
+    s.defer = true;
+    s.src = "https://www.google-analytics.com/analytics.js";
+    document.head.appendChild(s);
+  </script>
 </body>
 
 </html>
