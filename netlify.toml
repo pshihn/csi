@@ -1,0 +1,4 @@
+# 404s
+[[redirects]]
+  from = "*"
+  to = "/"
