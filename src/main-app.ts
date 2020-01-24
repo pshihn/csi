@@ -52,13 +52,15 @@ export class MainApp extends LitElement {
         height: calc(100vh - 52px);
       }
       #controlsSection {
-        background: var(--medium-grey);
         min-height: 100px;
         max-width: 640px;
         margin: 0 auto;
         width: 100%;
-        border-radius: 10px 10px 0 0;
         box-sizing: border-box;
+      }
+      control-panel {
+        background: var(--medium-grey);
+        border-radius: 10px 10px 0 0;
       }
       #downloadButton {
         background: none;
