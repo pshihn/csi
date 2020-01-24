@@ -1,3 +1,7 @@
+[build]
+  publish = "/"
+  command = "npm run build"
+
 # 404s
 [[redirects]]
   from = "*"
