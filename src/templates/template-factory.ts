@@ -43,13 +43,13 @@ export const templateList: TemplateInfo[] = [
     preview: '/images/swyx-preview.jpg'
   },
   {
-    type: 'author',
-    name: 'Author',
-    preview: '/images/author-preview.jpg'
-  },
-  {
     type: 'sketchy',
     name: 'Sketchy',
     preview: '/images/sketchy-preview.jpg'
+  },
+  {
+    type: 'author',
+    name: 'Author',
+    preview: '/images/author-preview.jpg'
   }
 ];

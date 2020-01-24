@@ -18,7 +18,7 @@ export class MainApp extends LitElement {
   @property() private currentTemplate = templateList[0].type;
   @property() private data: PageData = {
     bgColor: '#fff',
-    fontSize: 60,
+    fontSize: 64,
     subtitle: '',
     author: '',
     textColor: '#000',
