@@ -1,6 +1,12 @@
 export type VERT_ALIGNMENT = 'top' | 'bottom' | 'middle';
 export type HORIZ_ALIGNMENT = 'left' | 'right' | 'center';
 
+export interface PageImage {
+  buffer: ArrayBuffer;
+  width: number;
+  height: number;
+}
+
 export interface PageData {
   title: string;
   subtitle: string;
@@ -10,7 +16,7 @@ export interface PageData {
   fontSize: number;
   textColor: string;
   bgColor: string;
-  image?: HTMLImageElement;
+  image?: PageImage;
   halignImage: HORIZ_ALIGNMENT;
   valignImage: VERT_ALIGNMENT;
   tint: boolean;

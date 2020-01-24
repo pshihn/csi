@@ -20,7 +20,7 @@ export class AuthorTemplate implements Template {
     let authorColor = 'white';
     if (data.image) {
       ctx.clearRect(0, 0, width, height);
-      ctx.drawImage(data.image, 0, 0, data.image.naturalWidth, data.image.naturalHeight, 0, 0, 1, 1);
+      drawImage(ctx, data.image, 'center', 'middle', 0, 0, 1, 1);
       const imageData = ctx.getImageData(0, 0, 1, 1);
       imageColor = `rgba(${imageData.data.join(',')})`;
       const luminance = Math.sqrt((0.299 * Math.pow(imageData.data[0], 2)) + (0.587 * Math.pow(imageData.data[1], 2)) + (0.114 * Math.pow(imageData.data[2], 2)));

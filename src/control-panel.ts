@@ -1,6 +1,6 @@
 import { LitElement, customElement, TemplateResult, html, CSSResultArray, css, property } from 'lit-element';
 import { flex } from 'soso/bin/styles/flex';
-import { PageData } from './data';
+import { PageData, PageImage } from './data';
 import { fire } from 'soso/bin/utils/ui-utils';
 import { ButtonItem } from './controls/icon-button-list';
 import { TemplateType } from './templates/template';
@@ -205,7 +205,8 @@ export class ControlPanel extends LitElement {
   private async handleBgFile(e: CustomEvent) {
     const file: File = e.detail.file;
     if (file) {
-      const image = await this.loadImage(file);
+      const image = await this.loadPageImage(file);
+      console.log('image', image);
       if (image) {
         this.data!.image = image;
       } else {
@@ -229,7 +230,33 @@ export class ControlPanel extends LitElement {
     }
   }
 
-  private async loadImage(file: File): Promise<HTMLImageElement | null> {
+  private async loadPageImage(file: File): Promise<PageImage | null> {
+    const image = await this.loadImageElement(file);
+    if (!image) {
+      return null;
+    }
+    const { naturalWidth, naturalHeight } = image;
+    return new Promise<PageImage | null>((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const buffer = event.target?.result;
+        if (buffer) {
+          resolve({
+            buffer: buffer as ArrayBuffer,
+            width: naturalWidth,
+            height: naturalHeight
+          });
+        } else {
+          resolve(null);
+        }
+      };
+      reader.onerror = () => resolve(null);
+      reader.onabort = () => resolve(null);
+      reader.readAsArrayBuffer(file);
+    });
+  }
+
+  private async loadImageElement(file: File): Promise<HTMLImageElement | null> {
     const url = window.URL.createObjectURL(file);
     const revoke = () => {
       try {

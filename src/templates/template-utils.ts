@@ -1,5 +1,5 @@
-import { SomeCanvasContext } from './template';
-import { HORIZ_ALIGNMENT, VERT_ALIGNMENT } from 'src/data';
+import { SomeCanvasContext, SomeCanvas } from './template';
+import { HORIZ_ALIGNMENT, VERT_ALIGNMENT, PageImage } from 'src/data';
 
 export interface LineInfo {
   text: string;
@@ -39,9 +39,9 @@ export function computeLines(ctx: SomeCanvasContext, text: string, maxWidth: num
   return lines;
 }
 
-export function drawImage(ctx: SomeCanvasContext, image: HTMLImageElement, halign: HORIZ_ALIGNMENT, valign: VERT_ALIGNMENT, x: number, y: number, width: number, height: number) {
-  const imw = image.naturalWidth;
-  const imh = image.naturalHeight;
+export function drawImage(ctx: SomeCanvasContext, image: PageImage, halign: HORIZ_ALIGNMENT, valign: VERT_ALIGNMENT, x: number, y: number, width: number, height: number) {
+  const imw = image.width;
+  const imh = image.height;
   if (imh && imw) {
     let h = 0;
     let w = 0;
@@ -85,7 +85,13 @@ export function drawImage(ctx: SomeCanvasContext, image: HTMLImageElement, halig
         case 'middle':
           break;
       }
-      ctx.drawImage(image, sx, sy, dx, dy, x, y, width, height);
+      const imageData = new ImageData(new Uint8ClampedArray(image.buffer), imw, imh);
+      const placeholderCanvas: SomeCanvas = (typeof OffscreenCanvas !== undefined) ? new OffscreenCanvas(imw, imh) : document.createElement('canvas');
+      placeholderCanvas.width = imw;
+      placeholderCanvas.height = imh;
+      const pc = placeholderCanvas.getContext('2d')!;
+      pc.putImageData(imageData, 0, 0);
+      ctx.drawImage(placeholderCanvas, sx, sy, dx, dy, x, y, width, height);
     }
   }
 }
