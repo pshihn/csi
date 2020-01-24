@@ -35,21 +35,21 @@ export const templateList: TemplateInfo[] = [
   {
     type: 'og',
     name: 'The OG',
-    preview: '/images/preview.png'
+    preview: '/images/og-preview.jpg'
   },
   {
     type: 'swyx',
     name: 'SWYX',
-    preview: '/images/preview.png'
+    preview: '/images/swyx-preview.jpg'
   },
   {
     type: 'author',
-    name: 'Writer',
-    preview: '/images/preview.png'
+    name: 'Author',
+    preview: '/images/author-preview.jpg'
   },
   {
     type: 'sketchy',
     name: 'Sketchy',
-    preview: '/images/preview.png'
+    preview: '/images/sketchy-preview.jpg'
   }
 ];
